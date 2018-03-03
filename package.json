@@ -1,0 +1,51 @@
+{
+  "name": "@ekz/async-data",
+  "version": "0.1.0",
+  "description": "Enhanced promise type to be used with flow.js",
+  "keywords": [
+    "async",
+    "promise",
+    "option",
+    "flow",
+    "type-safe"
+  ],
+  "author": {
+    "name": "Alan Heitkotter",
+    "email": "heitkotter@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/erkez/async-data.git"
+  },
+  "bugs": {
+    "url": "https://github.com/erkez/async-data/issues"
+  },
+  "homepage": "https://github.com/erkez/async-data#readme",
+  "main": "lib/index.js",
+  "license": "MIT",
+  "private": false,
+  "files": [
+    "lib",
+    "README.md",
+    "LICENSE"
+  ],
+  "dependencies": {
+    "@ekz/option": "^1.0.3",
+    "luxon": "^0.5.3"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-flow": "^6.23.0",
+    "documentation": "^5.4.0",
+    "flow-bin": "^0.66.0",
+    "flow-copy-source": "^1.3.0",
+    "flow-typed": "^2.3.0",
+    "jest": "^22.4.2"
+  },
+  "scripts": {
+    "test": "jest",
+    "build": "babel src/ -d lib/ && flow-copy-source -v src lib",
+    "prepublish": "yarn run test && yarn run build"
+  }
+}

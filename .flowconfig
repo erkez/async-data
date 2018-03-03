@@ -1,0 +1,13 @@
+[ignore]
+
+[include]
+
+[libs]
+flow-typed/
+
+[options]
+module.file_ext=.js
+munge_underscores=true
+
+[lints]
+all=warn
