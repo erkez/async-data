@@ -8,6 +8,7 @@ flow-typed/
 [options]
 module.file_ext=.js
 munge_underscores=true
+esproposal.export_star_as=enable
 
 [lints]
 all=warn

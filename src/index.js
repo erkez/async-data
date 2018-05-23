@@ -3,6 +3,7 @@
 
 import { DateTime } from 'luxon';
 import { Some, None } from '@ekz/option';
+import * as extractors from './extractors';
 import type { Option } from '@ekz/option';
 
 export type AsyncDataMatch<A, B> = {|
@@ -203,3 +204,5 @@ export function observePromise<A>(
             updateState(getState().fail(error));
         });
 }
+
+export { extractors };
