@@ -100,7 +100,7 @@ class $AsyncData<A> implements AsyncData<A> {
     }
 
     duration(currentTime?: DateTime = DateTime.utc()): Option<number> {
-        return this._startTime.map(start => currentTime.diff(start).milliseconds);
+        return this._startTime.map(start => currentTime.diff(start, 'milliseconds').milliseconds);
     }
 
     pending(startTime?: DateTime = DateTime.utc()): AsyncData<A> {
@@ -200,7 +200,7 @@ export function observePromise<A>(
         .then(data => {
             updateState(getState().ready(data));
         })
-        .catch(error => {
+        .catch((error: Error) => {
             updateState(getState().fail(error));
         });
 }
