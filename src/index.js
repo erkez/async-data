@@ -193,16 +193,27 @@ export function observePromise<A>(
     promise: Promise<A>,
     getState: () => AsyncData<A>,
     updateState: (AsyncData<A>) => mixed
-): void {
+): () => void {
     updateState(getState().pending());
+
+    let cancelled = false;
+    const unsubscribe = () => {
+        cancelled = true;
+    };
 
     promise
         .then(data => {
-            updateState(getState().ready(data));
+            if (!cancelled) {
+                updateState(getState().ready(data));
+            }
         })
         .catch((error: Error) => {
-            updateState(getState().fail(error));
+            if (!cancelled) {
+                updateState(getState().fail(error));
+            }
         });
+
+    return unsubscribe;
 }
 
 export { extractors };

@@ -252,6 +252,49 @@ describe('AsyncData', () => {
         expect(ad.state).toBe('FailedStale');
         expect(ad.value).toBe(1);
     });
+
+    it('observe promise should not call ready updater when cancelled', async () => {
+        let ad: AsyncData.AsyncData<number> = AsyncData.Empty();
+        let getter = jest.fn().mockImplementation(() => ad);
+        let setter = jest.fn().mockImplementation(newAd => (ad = newAd));
+        let deferred = defer();
+
+        let cancel = AsyncData.observePromise(deferred.promise, getter, setter);
+        expect(ad.state).toBe('Pending');
+        expect(getter).toHaveBeenCalledTimes(1);
+        expect(setter.mock.calls[0][0].state).toBe('Pending');
+
+        cancel();
+        deferred.resolve(1);
+        await deferred.promise;
+
+        expect(getter).toHaveBeenCalledTimes(1);
+        expect(setter).toHaveBeenCalledTimes(1);
+        expect(ad.state).toBe('Pending');
+    });
+
+    it('observe promise should not call failed updater when cancelled', async () => {
+        let ad: AsyncData.AsyncData<number> = AsyncData.Empty();
+        let getter = jest.fn().mockImplementation(() => ad);
+        let setter = jest.fn().mockImplementation(newAd => (ad = newAd));
+        let deferred = defer();
+
+        let cancel = AsyncData.observePromise(deferred.promise, getter, setter);
+        expect(ad.state).toBe('Pending');
+        expect(getter).toHaveBeenCalledTimes(1);
+        expect(setter.mock.calls[0][0].state).toBe('Pending');
+
+        cancel();
+        deferred.reject(new Error());
+
+        try {
+            await deferred.promise;
+        } catch (e) {}
+
+        expect(getter).toHaveBeenCalledTimes(1);
+        expect(setter).toHaveBeenCalledTimes(1);
+        expect(ad.state).toBe('Pending');
+    });
 });
 
 type Deferred<V> = {
