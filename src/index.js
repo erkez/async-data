@@ -191,10 +191,9 @@ export function Ready<A>(value: A): AsyncData<A> {
 
 export function observePromise<A>(
     promise: Promise<A>,
-    getState: () => AsyncData<A>,
-    updateState: (AsyncData<A>) => mixed
+    updater: (cb: AsyncData<A> => AsyncData<A>) => mixed
 ): () => void {
-    updateState(getState().pending());
+    updater(s => s.pending());
 
     let cancelled = false;
     const unsubscribe = () => {
@@ -204,16 +203,25 @@ export function observePromise<A>(
     promise
         .then(data => {
             if (!cancelled) {
-                updateState(getState().ready(data));
+                updater(s => s.ready(data));
             }
         })
         .catch((error: Error) => {
             if (!cancelled) {
-                updateState(getState().fail(error));
+                updater(s => s.fail(error));
             }
         });
 
     return unsubscribe;
+}
+
+export function observePromiseGS<A>(
+    promise: Promise<A>,
+    getState: () => AsyncData<A>,
+    setState: (AsyncData<A>) => mixed
+): () => void {
+    let updater = update => setState(update(getState()));
+    return observePromise(promise, updater);
 }
 
 export { extractors };

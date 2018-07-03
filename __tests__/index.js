@@ -221,7 +221,7 @@ describe('AsyncData', () => {
         let setter = jest.fn().mockImplementation(newAd => (ad = newAd));
         let deferred = defer();
 
-        AsyncData.observePromise(deferred.promise, getter, setter);
+        AsyncData.observePromiseGS(deferred.promise, getter, setter);
         expect(ad.state).toBe('Pending');
         expect(getter).toHaveBeenCalledTimes(1);
         expect(setter.mock.calls[0][0].state).toBe('Pending');
@@ -236,7 +236,7 @@ describe('AsyncData', () => {
         expect(ad.value).toBe(1);
 
         deferred = defer();
-        AsyncData.observePromise(deferred.promise, getter, setter);
+        AsyncData.observePromiseGS(deferred.promise, getter, setter);
         expect(getter).toHaveBeenCalledTimes(3);
         expect(setter).toHaveBeenCalledTimes(3);
         expect(setter.mock.calls[2][0].state).toBe('PendingStale');
@@ -259,7 +259,7 @@ describe('AsyncData', () => {
         let setter = jest.fn().mockImplementation(newAd => (ad = newAd));
         let deferred = defer();
 
-        let cancel = AsyncData.observePromise(deferred.promise, getter, setter);
+        let cancel = AsyncData.observePromiseGS(deferred.promise, getter, setter);
         expect(ad.state).toBe('Pending');
         expect(getter).toHaveBeenCalledTimes(1);
         expect(setter.mock.calls[0][0].state).toBe('Pending');
@@ -279,7 +279,7 @@ describe('AsyncData', () => {
         let setter = jest.fn().mockImplementation(newAd => (ad = newAd));
         let deferred = defer();
 
-        let cancel = AsyncData.observePromise(deferred.promise, getter, setter);
+        let cancel = AsyncData.observePromiseGS(deferred.promise, getter, setter);
         expect(ad.state).toBe('Pending');
         expect(getter).toHaveBeenCalledTimes(1);
         expect(setter.mock.calls[0][0].state).toBe('Pending');
