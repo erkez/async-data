@@ -205,11 +205,15 @@ export function observePromise<A>(
             if (!cancelled) {
                 updater(s => s.ready(data));
             }
+
+            return null;
         })
         .catch((error: Error) => {
             if (!cancelled) {
                 updater(s => s.fail(error));
             }
+
+            return null;
         });
 
     return unsubscribe;
