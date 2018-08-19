@@ -16,9 +16,9 @@
     esutils "^2.0.2"
     js-tokens "^3.0.0"
 
-"@ekz/option@^1.0.5":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@ekz/option/-/option-1.2.0.tgz#f7baee5f38506d991101da92740ce41e8dd63704"
+"@ekz/option@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@ekz/option/-/option-1.0.0.tgz#7116e81e0c9c335d965d388c86e3e27b012892d8"
 
 "@gimenete/type-writer@^0.1.3":
   version "0.1.3"
