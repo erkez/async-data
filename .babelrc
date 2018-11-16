@@ -1,3 +1,4 @@
 {
-    "presets": ["env", "flow"]
+    "presets": ["@babel/env", "@babel/flow"],
+    "only": ["src", "__tests__"]
 }

@@ -33,18 +33,24 @@
     "luxon": "^1.2.1"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-flow": "^6.23.0",
-    "documentation": "^8.0.0",
+    "@babel/cli": "^7.1.5",
+    "@babel/core": "^7.1.6",
+    "@babel/preset-env": "^7.1.6",
+    "@babel/preset-flow": "^7.0.0",
     "@ekz/option": "^1",
-    "flow-bin": "^0.79.1",
+    "babel-core": "^7.0.0-bridge",
+    "babel-jest": "^23.6.0",
+    "documentation": "^8.1.2",
+    "flow-bin": "^0.86.0",
     "flow-copy-source": "^2.0.0",
     "flow-typed": "^2.3.0",
-    "jest": "^23.1.0"
+    "jest": "^23.6.0"
   },
   "peerDependencies": {
     "@ekz/option": "^1"
+  },
+  "resolutions": {
+    "babel-core": "7.0.0-bridge.0"
   },
   "scripts": {
     "test": "jest",
