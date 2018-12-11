@@ -30,6 +30,7 @@ export interface AsyncData<A> {
     fail(error: Error): AsyncData<A>;
     ready(value: A): AsyncData<A>;
     map<B>(f: (A) => B): AsyncData<B>;
+    forEach(f: A => mixed): void;
     match<B>(match: AsyncDataMatch<A, B>, getDefault: () => B): B;
     toOption(): Option<A>;
 }
@@ -124,6 +125,10 @@ class $AsyncData<A> implements AsyncData<A> {
             },
             () => new $AsyncData(None, this._error, this._startTime)
         );
+    }
+
+    forEach(f: A => mixed): void {
+        this.map(f);
     }
 
     match<B>(match: AsyncDataMatch<A, B>, getDefault: () => B): B {

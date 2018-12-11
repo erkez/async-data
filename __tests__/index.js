@@ -192,6 +192,49 @@ describe('AsyncData', () => {
         expect(ad.value).toBe(6);
     });
 
+    it('should properly forEach', () => {
+        let ad: AsyncData.AsyncData<number> = AsyncData.Empty();
+        let forEachFn = jest.fn();
+
+        ad.forEach(forEachFn);
+        expect(forEachFn).toHaveBeenCalledTimes(0);
+        forEachFn.mockClear();
+
+        ad = ad.fail(new Error());
+        ad.forEach(forEachFn);
+        expect(forEachFn).toHaveBeenCalledTimes(0);
+        forEachFn.mockClear();
+
+        ad = ad.pending();
+        ad.forEach(forEachFn);
+        expect(forEachFn).toHaveBeenCalledTimes(0);
+        forEachFn.mockClear();
+
+        ad = ad.ready(2);
+        ad.forEach(forEachFn);
+        expect(forEachFn).toHaveBeenCalledTimes(1);
+        expect(forEachFn).toHaveBeenLastCalledWith(2);
+        forEachFn.mockClear();
+
+        ad = ad.pending();
+        ad.forEach(forEachFn);
+        expect(forEachFn).toHaveBeenCalledTimes(1);
+        expect(forEachFn).toHaveBeenLastCalledWith(2);
+        forEachFn.mockClear();
+
+        ad = ad.fail(new Error());
+        ad.forEach(forEachFn);
+        expect(forEachFn).toHaveBeenCalledTimes(1);
+        expect(forEachFn).toHaveBeenLastCalledWith(2);
+        forEachFn.mockClear();
+
+        ad = ad.ready(3);
+        ad.forEach(forEachFn);
+        expect(forEachFn).toHaveBeenCalledTimes(1);
+        expect(forEachFn).toHaveBeenLastCalledWith(3);
+        forEachFn.mockClear();
+    });
+
     it('should properly get duration of pending data', () => {
         expect.assertions(2);
         let startTime = DateTime.utc();
