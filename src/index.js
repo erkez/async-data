@@ -2,9 +2,8 @@
 'use strict';
 
 import { DateTime } from 'luxon';
-import { Some, None } from '@ekz/option';
+import { Option, Some, None } from '@ekz/option';
 import * as extractors from './extractors';
-import type { Option } from '@ekz/option';
 
 export type AsyncDataMatch<A, B> = {|
     Empty?: () => B,
@@ -32,6 +31,7 @@ export interface AsyncData<A> {
     map<B>(f: (A) => B): AsyncData<B>;
     forEach(f: A => mixed): void;
     match<B>(match: AsyncDataMatch<A, B>, getDefault: () => B): B;
+    zip<B>(other: AsyncData<B>): AsyncData<[A, B]>;
     toOption(): Option<A>;
 }
 
@@ -155,6 +155,23 @@ class $AsyncData<A> implements AsyncData<A> {
         }
 
         return getDefault();
+    }
+
+    zip<B>(other: AsyncData<B>): AsyncData<[A, B]> {
+        let thisStart = this._startTime.map(x => x.valueOf()).getOrReturn(null);
+        
+        // $FlowFixMe
+        let otherStart: number | null = other._startTime.map(x => x.valueOf()).getOrReturn(null);
+
+        let startTime = Option.of(thisStart > otherStart ? thisStart : otherStart)
+            .map(DateTime.fromMillis);
+
+        // $FlowFixMe
+        let error: Option<Error> = this._error.isDefined ? this._error : other._error;
+
+        let value = this.toOption().flatMap(a => other.toOption().map(b => [a, b]));
+
+        return new $AsyncData(value, error, startTime);
     }
 
     toOption(): Option<A> {

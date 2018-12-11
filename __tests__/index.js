@@ -235,6 +235,40 @@ describe('AsyncData', () => {
         forEachFn.mockClear();
     });
 
+    it('should properly zip two AsyncData values', () => {
+        let empty: AsyncData.AsyncData<number> = AsyncData.Empty();
+        let failed: AsyncData.AsyncData<number> = AsyncData.Failed(new Error());
+        let pending: AsyncData.AsyncData<number> = AsyncData.Pending();
+        let ready: AsyncData.AsyncData<number> = AsyncData.Ready(10);
+        let pendingStale: AsyncData.AsyncData<number> = AsyncData.Ready(15).pending();
+        let failedStale = pendingStale.fail(new Error());
+
+        expect(empty.zip(empty).state === 'Empty').toBe(true);
+        expect(empty.zip(ready).state === 'Empty').toBe(true);
+        expect(ready.zip(empty).state === 'Empty').toBe(true);
+
+        expect(failed.zip(failed).state === 'Failed').toBe(true);
+        expect(ready.zip(failed).state === 'Failed').toBe(true);
+        expect(failed.zip(ready).state === 'Failed').toBe(true);
+
+        expect(ready.zip(ready).state === 'Ready').toBe(true);
+        expect(ready.zip(ready).value).toEqual([10, 10]);
+
+        expect(ready.zip(pending).state === 'Pending').toBe(true);
+        expect(pending.zip(ready).state === 'Pending').toBe(true);
+        expect(pending.zip(pending).state === 'Pending').toBe(true);
+        
+        expect(ready.zip(pendingStale).value).toEqual([10, 15]);
+        expect(pendingStale.zip(ready).value).toEqual([15, 10]);
+        expect(ready.zip(pendingStale).state === 'PendingStale').toBe(true);
+        expect(pendingStale.zip(ready).state === 'PendingStale').toBe(true);
+
+        expect(failedStale.zip(ready).state === 'FailedStale').toBe(true);
+        expect(failedStale.zip(ready).value).toEqual([15, 10]);
+        expect(ready.zip(failedStale).state === 'FailedStale').toBe(true);
+        expect(ready.zip(failedStale).value).toEqual([10, 15]);
+    });
+
     it('should properly get duration of pending data', () => {
         expect.assertions(2);
         let startTime = DateTime.utc();
