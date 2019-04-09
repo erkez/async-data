@@ -29,6 +29,7 @@ export interface AsyncData<A> {
     fail(error: Error): AsyncData<A>;
     ready(value: A): AsyncData<A>;
     map<B>(f: (A) => B): AsyncData<B>;
+    flatMap<B>(f: A => AsyncData<B>): AsyncData<B>;
     forEach(f: A => mixed): void;
     match<B>(match: AsyncDataMatch<A, B>, getDefault: () => B): B;
     zip<B>(other: AsyncData<B>): AsyncData<[A, B]>;
@@ -122,6 +123,17 @@ class $AsyncData<A> implements AsyncData<A> {
                 Ready: value => Ready(f(value)),
                 PendingStale: (value, startTime) => Ready(f(value)).pending(startTime),
                 FailedStale: (value, error) => Ready(f(value)).fail(error)
+            },
+            () => new $AsyncData(None, this._error, this._startTime)
+        );
+    }
+
+    flatMap<B>(f: A => AsyncData<B>): AsyncData<B> {
+        return this.match(
+            {
+                Ready: value => f(value),
+                PendingStale: (value) => f(value),
+                FailedStale: (value) => f(value)
             },
             () => new $AsyncData(None, this._error, this._startTime)
         );

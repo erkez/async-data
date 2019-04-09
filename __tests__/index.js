@@ -192,6 +192,42 @@ describe('AsyncData', () => {
         expect(ad.value).toBe(6);
     });
 
+    it('should properly flatMap', () => {
+        let ad: AsyncData.AsyncData<number> = AsyncData.Empty();
+
+        ad = ad.flatMap(() => AsyncData.Empty());
+        expect(ad.state).toBe('Empty');
+
+        ad = ad.flatMap(() => AsyncData.Ready(1));
+        expect(ad.state).toBe('Empty');
+
+        ad = AsyncData.Ready(1);
+
+        ad = ad.flatMap(x => AsyncData.Ready(x + 1));
+        expect(ad.state).toBe('Ready');
+        expect(ad.value).toBe(2);
+
+        ad = ad.pending().flatMap(x => AsyncData.Ready(x + 1));
+        expect(ad.state).toBe('Ready');
+        expect(ad.value).toBe(3);
+
+        ad = ad.fail(new Error()).flatMap(x => AsyncData.Ready(x + 1));
+        expect(ad.state).toBe('Ready');
+        expect(ad.value).toBe(4);
+
+        ad = ad.flatMap(() => AsyncData.Failed(new Error()));
+        expect(ad.state).toBe('Failed');
+        expect(() => ad.value).toThrow();
+
+        ad = AsyncData.Ready(1).pending();
+        ad = ad.flatMap(() => AsyncData.Failed(new Error()));
+        expect(ad.state).toBe('Failed');
+
+        ad = AsyncData.Ready(1).fail(new Error());
+        ad = ad.flatMap(() => AsyncData.Pending());
+        expect(ad.state).toBe('Pending');
+    });
+
     it('should properly forEach', () => {
         let ad: AsyncData.AsyncData<number> = AsyncData.Empty();
         let forEachFn = jest.fn();
