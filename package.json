@@ -1,6 +1,6 @@
 {
   "name": "@ekz/async-data",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "Enhanced promise type to be used with flow.js",
   "keywords": [
     "async",
@@ -25,6 +25,7 @@
   "license": "MIT",
   "private": false,
   "files": [
+    "index.d.ts",
     "lib",
     "README.md",
     "LICENSE"
