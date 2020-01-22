@@ -27,7 +27,7 @@ declare module '@ekz/async-data' {
         pending(startTime?: DateTime): AsyncData<A>;
         fail(error: Error): AsyncData<A>;
         ready(value: A): AsyncData<A>;
-        map<B>(f: (A) => B): AsyncData<B>;
+        map<B>(f: (value: A) => B): AsyncData<B>;
         match<B>(match: AsyncDataMatch<A, B>, getDefault: () => B): B;
         toOption(): Option<A>;
     }

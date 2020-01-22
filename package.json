@@ -1,6 +1,6 @@
 {
   "name": "@ekz/async-data",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "description": "Enhanced promise type to be used with flow.js",
   "keywords": [
     "async",
@@ -45,7 +45,8 @@
     "flow-bin": "^0.86.0",
     "flow-copy-source": "^2.0.0",
     "flow-typed": "^2.3.0",
-    "jest": "^23.6.0"
+    "jest": "^23.6.0",
+    "typescript": "^3.7.5"
   },
   "peerDependencies": {
     "@ekz/option": "^1"
@@ -55,7 +56,8 @@
   },
   "scripts": {
     "test": "jest",
+    "check-definitions": "tsc --noEmit --strict --noImplicitAny false index.d.ts",
     "build": "babel src/ -d lib/ && flow-copy-source -v src lib",
-    "prepublish": "yarn run test && yarn run build"
+    "prepublish": "yarn check-definitions && yarn run test && yarn run build"
   }
 }
