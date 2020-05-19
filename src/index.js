@@ -175,6 +175,7 @@ class $AsyncData<A> implements AsyncData<A> {
         // $FlowFixMe
         let otherStart: number | null = other._startTime.map(x => x.valueOf()).getOrReturn(null);
 
+        // $FlowFixMe
         let startTime = Option.of(thisStart > otherStart ? thisStart : otherStart)
             .map(DateTime.fromMillis);
 

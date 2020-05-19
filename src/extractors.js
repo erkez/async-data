@@ -1,7 +1,7 @@
 // @flow
 'use strict';
 
-import type { AsyncData } from '../';
+import type { AsyncData } from './';
 
 export function render<A, R>(ad: AsyncData<A>, f: A => R): R | null {
     return ad.nonEmpty ? f(ad.value) : null;
