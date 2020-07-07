@@ -28,7 +28,10 @@ declare module '@ekz/async-data' {
         fail(error: Error): AsyncData<A>;
         ready(value: A): AsyncData<A>;
         map<B>(f: (value: A) => B): AsyncData<B>;
+        flatMap<B>(f: (value: A) => AsyncData<B>): AsyncData<B>;
+        forEach(f: (value: A) => unknown): void;
         match<B>(match: AsyncDataMatch<A, B>, getDefault: () => B): B;
+        zip<B>(other: AsyncData<B>): AsyncData<[A, B]>;
         toOption(): Option<A>;
     }
 
